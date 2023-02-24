@@ -62,49 +62,50 @@
 #   You survived!
 #   ```
 
+# Define the river and the player's starting position
 river = "-----,--C--,CC-CC,CC-CC"
-player_col = 2
 player_row = 0
+player_col = 2
 
-# Define a method to print the game board
+# Define the print_board method
 def print_board(river, player_col, player_row)
   river_arr = river.split(',')
   river_arr[player_row][player_col] = 'P'
   puts river_arr.join("\n")
 end
 
-# Print the initial state of the game
-print_board(river, player_col, player_row)
-
 # Start the game loop
-loop do
-  # Ask the player for input
-  puts "Type left, right or neither"
-  input = gets.chomp.downcase
+while true
+  # Print the board
+  river_arr = river.split(',')
+  print_board(river, player_col, player_row)
 
-  # Update the player position based on input
+  # Check if the player was eaten
+  if river_arr[player_row][player_col] == 'C'
+    puts "You were eaten."
+    break
+  end
+
+  # Ask the player for input
+  puts "Type left, right, or neither:"
+  input = gets.chomp
+
+  # Update the player's position based on input
   case input
   when 'left'
     player_col = [player_col - 1, 0].max
   when 'right'
-    player_col = [player_col + 1, river.split(',').last.size - 1].min
+    player_col = [player_col + 1, river_arr[0].size - 1].min
   end
 
   # Move the player down the river
   player_row += 1
 
-  # Check if the player was eaten by a crocodile
-  if river.split(',')[player_row][player_col] == 'C'
-    puts "You were eaten."
-    break
-  end
-
-  # Print the current state of the game
-  print_board(river, player_col, player_row)
-
-  # Check if the player made it to the end of the river
-  if player_row == river.split(',').size - 1
+  # Check if the player made it to the end
+  if player_row == river_arr.size
     puts "You survived!"
     break
   end
 end
+
+
